@@ -20,12 +20,10 @@ plugins=(git colored-man-pages z aliases vi-mode zsh-syntax-highlighting)
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 ### Aliases
-alias zshconfig="chezmoi edit ~/.zshrc"
-alias nvimconfig="chezmoi edit ~/.config/nvim"
-alias cmapply="chezmoi apply -v"
-alias cmdiff="chezmoi diff"
+alias zshconfig="vim ~/.zshrc"
+alias vimconfig="cd ~/.config/lvim; vim"
 
-alias vim=nvim
+alias vim=lvim
 
 alias ls=lsd
 alias l='ls -l'
@@ -33,6 +31,7 @@ alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
 
+alias f='lfcd'
 # Vi mode
 zstyle ':completion:*' menu select
 zmodload zsh/complist
@@ -74,5 +73,5 @@ export GOPATH="$HOME/go"
 
 source $ZSH/oh-my-zsh.sh
 # Default editor
-export EDITOR='nvim'
-export VISUAL='nvim'  
+export EDITOR='lvim'
+export VISUAL='lvim'  

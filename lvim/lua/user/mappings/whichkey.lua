@@ -4,8 +4,14 @@ local k = kind.cmp_kind
 local i = kind.icons
 local f = kind.file_icons
 
+lvim.builtin.which_key.mappings["N"] = {
+  name = "Noice",
+  d = { "<cmd>Noice dismiss<cr>", i.exit .. "Dismiss" },
+}
+
+
 lvim.builtin.which_key.mappings["o"] = {
-  name = " " .. f.LightBlue[1] .. " Go",
+  name = " " .. f.LightBlue[1] .. "  Go",
   a = { "<cmd>GoCodeAction<cr>", k.Text .. "Code Action" },
   e = { "<cmd>GoIfErr<cr>", i.exit .. "If Error" },
   r = { "<cmd>GoRename<cr>", k.Text .. "Rename" },
