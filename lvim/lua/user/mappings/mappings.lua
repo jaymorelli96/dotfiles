@@ -4,11 +4,17 @@ require("user.mappings.whichkey")
 -- NORMAL MODE
 lvim.keys.normal_mode["<C-d>"] = "<C-d>zz"
 lvim.keys.normal_mode["<C-u>"] = "<C-u>zz"
+
 lvim.keys.normal_mode["B"] = "0"
 lvim.keys.normal_mode["E"] = "$"
+
 lvim.keys.normal_mode["<Esc>"] = ":noh<CR>"
 lvim.keys.normal_mode["<bs>"] = "<C-^>zz"
+
 lvim.keys.normal_mode[";"] = ":"
+
+lvim.keys.normal_mode["cis"] = 'ci"'
+lvim.keys.normal_mode["vis"] = 'vi"'
 
 -- INSERT MODE
 lvim.keys.insert_mode["jk"] = "<Esc>"

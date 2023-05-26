@@ -21,3 +21,8 @@ lvim.lsp.buffer_mappings.normal_mode["gf"] = {
   ":Telescope frecency<cr>",
   kind.cmp_kind.Reference .. " Telescope Frecency"
 }
+
+lvim.lsp.buffer_mappings.normal_mode["ga"] = {
+  ":lua vim.lsp.buf.code_action()<cr>",
+  kind.cmp_kind.Reference .. " Find references"
+}

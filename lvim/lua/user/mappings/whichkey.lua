@@ -12,7 +12,6 @@ lvim.builtin.which_key.mappings["N"] = {
 
 lvim.builtin.which_key.mappings["o"] = {
   name = " " .. f.LightBlue[1] .. "  Go",
-  a = { "<cmd>GoCodeAction<cr>", k.Text .. "Code Action" },
   e = { "<cmd>GoIfErr<cr>", i.exit .. "If Error" },
   r = { "<cmd>GoRename<cr>", k.Text .. "Rename" },
 }

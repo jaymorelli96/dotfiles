@@ -9,3 +9,6 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
 vim.o.wrap = false
 
+vim.g.UltiSnipsExpandTrigger = "<c-t>"
+vim.g.UltiSnipsJumpForwardTrigger = "<c-b>"
+vim.g.UltiSnipsJumpBackwardTrigger = "<c-z>"
