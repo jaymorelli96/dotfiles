@@ -1,6 +1,9 @@
 require("user.mappings.lsp")
 require("user.mappings.whichkey")
 
+-- TERMINAL
+lvim.builtin.terminal.open_mapping = "<c-t>"
+
 -- NORMAL MODE
 lvim.keys.normal_mode["<C-d>"] = "<C-d>zz"
 lvim.keys.normal_mode["<C-u>"] = "<C-u>zz"
@@ -13,26 +16,29 @@ lvim.keys.normal_mode["<bs>"] = "<C-^>zz"
 
 lvim.keys.normal_mode[";"] = ":"
 
+lvim.keys.normal_mode["<C-p>"] = "%"
+
 lvim.keys.normal_mode["cis"] = 'ci"'
 lvim.keys.normal_mode["vis"] = 'vi"'
 
+lvim.keys.normal_mode["K"] = false
+lvim.keys.normal_mode["K"] = "<cmd>bnext<cr>"
+lvim.keys.normal_mode["J"] = "<cmd>bprev<cr>"
+
+lvim.keys.normal_mode["y"] = '"*y'
+lvim.keys.normal_mode["Y"] = '"*Y'
+lvim.keys.normal_mode["p"] = '"*p'
+lvim.keys.normal_mode["P"] = '"*P'
+
+lvim.keys.normal_mode["zR"] = ":lua require('ufo').openAllFolds()<CR>"
+lvim.keys.normal_mode["zM"] = ":lua require('ufo').closeAllFolds()<CR>"
+
+-- VISUAL MODE
+lvim.keys.visual_mode["y"] = '"*y'
+lvim.keys.visual_mode["Y"] = '"*Y'
+lvim.keys.visual_mode["p"] = '"*p'
+lvim.keys.visual_mode["P"] = '"*P'
+
+
 -- INSERT MODE
 lvim.keys.insert_mode["jk"] = "<Esc>"
-
--- HOP
-lvim.keys.normal_mode["ss"] = "<cmd>HopChar2<cr>"
-lvim.keys.normal_mode["sw"] = "<cmd>HopWord<cr>"
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set('', 'F', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set('', 't', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set('', 'T', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, { remap = true })

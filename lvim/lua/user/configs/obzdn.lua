@@ -11,9 +11,6 @@ return {
 
   -- Optional, customize how names/IDs for new notes are created.
   note_id_func = function(title)
-    -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
-    -- In this case a note with the title 'My new note' will given an ID that looks
-    -- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'
     local suffix = ""
     if title ~= nil then
       -- If title is given, transform it into valid file name.

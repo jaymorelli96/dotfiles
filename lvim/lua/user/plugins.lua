@@ -1,7 +1,76 @@
+local foldIcon = ""
+local hlgroup = "NonText"
+local function foldTextFormatter(virtText, lnum, endLnum, width, truncate)
+  local newVirtText = {}
+  local suffix = "  " .. foldIcon .. "  " .. tostring(endLnum - lnum)
+  local sufWidth = vim.fn.strdisplaywidth(suffix)
+  local targetWidth = width - sufWidth
+  local curWidth = 0
+  for _, chunk in ipairs(virtText) do
+    local chunkText = chunk[1]
+    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+    if targetWidth > curWidth + chunkWidth then
+      table.insert(newVirtText, chunk)
+    else
+      chunkText = truncate(chunkText, targetWidth - curWidth)
+      local hlGroup = chunk[2]
+      table.insert(newVirtText, { chunkText, hlGroup })
+      chunkWidth = vim.fn.strdisplaywidth(chunkText)
+      if curWidth + chunkWidth < targetWidth then
+        suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+      end
+      break
+    end
+    curWidth = curWidth + chunkWidth
+  end
+  table.insert(newVirtText, { suffix, hlgroup })
+  return newVirtText
+end
+
 lvim.plugins = {
   { "sainnhe/everforest" },
   { "morhetz/gruvbox" },
-  { "catppuccin/nvim",   name = "catppuccin" },
+  { 'shaunsingh/nord.nvim' },
+  { 'rmehri01/onenord.nvim' },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    config = function()
+      require("catppuccin").setup({
+        flavour = "frappe"
+      })
+    end
+  },
+
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        size = 15,
+        open_mapping = [[<M-0>]],
+        direction = 'horizontal',
+      })
+    end,
+  },
+
+  {
+    'AckslD/nvim-trevJ.lua',
+    config = function()
+      require("trevj").setup() -- call -> require('trevj').format_at_cursor() to work
+    end,
+  },
+  {
+    "AckslD/nvim-neoclip.lua",
+    dependencies = {
+      { 'nvim-telescope/telescope.nvim' },
+    },
+    config = function()
+      require('neoclip').setup({
+        require('telescope').load_extension('neoclip'),
+      })
+    end,
+  },
 
   { "folke/trouble.nvim" },
   {
@@ -29,13 +98,37 @@ lvim.plugins = {
       "MunifTanjim/nui.nvim",
     }
   },
-
   {
-    "phaazon/hop.nvim",
-    branch = "v2",
-    config = function()
-      require("hop").setup()
-    end
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          -- default options: exact mode, multi window, all directions, with a backdrop
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function()
+          require("flash").remote()
+        end,
+        desc = "Remote Flash",
+      },
+    },
   },
 
   {
@@ -74,40 +167,52 @@ lvim.plugins = {
       require("spectre").setup()
     end,
   },
+  { "fatih/vim-go" },
+
   {
-    "windwp/nvim-ts-autotag",
+    "nvim-neorg/neorg",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("nvim-ts-autotag").setup()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {}, -- Loads default behaviour
+          ["core.concealer"] = {
+            config = {
+              folds = false,
+              icon_preset = "diamond",
+            }
+          },                  -- Adds pretty icons to your documents
+          ["core.dirman"] = { -- Manages Neorg workspaces
+            config = {
+              workspaces = {
+                notes = "~/notes",
+              },
+            },
+          },
+        },
+      }
     end,
   },
 
-  { "christoomey/vim-tmux-navigator" },
-
-  { "fatih/vim-go" },
-
-  { "SirVer/ultisnips" },
-  { "quangnguyen30192/cmp-nvim-ultisnips" },
-
-
   {
-    "epwalsh/obsidian.nvim",
-    lazy = false,
-    event = { "BufReadPre " .. vim.fn.expand "~" .. "/Documents/Notes/**.md" },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
-      "nvim-telescope/telescope.nvim",
-    },
-    opts = require("user.configs.obzdn"),
-    config = function(_, opts)
-      require("obsidian").setup(opts)
-      vim.keymap.set("n", "gf", function()
-        if require("obsidian").util.cursor_on_markdown_link() then
-          return "<cmd>ObsidianFollowLink<CR>"
+    "kevinhwang91/nvim-ufo",
+    dependencies = "kevinhwang91/promise-async",
+    event = "BufReadPost",
+    opts = {
+      provider_selector = function(_, ft, _)
+        local lspWithOutFolding = { "markdown", "bash", "sh", "bash", "zsh", "css" }
+        if vim.tbl_contains(lspWithOutFolding, ft) then
+          return { "treesitter", "indent" }
         else
-          return "gf"
+          return { "lsp", "indent" }
         end
-      end, { noremap = false, expr = true })
-    end,
+      end,
+      -- open opening the buffer, close these fold kinds
+      -- use `:UfoInspect` to get available fold kinds from the LSP
+      close_fold_kinds = { "imports" },
+      open_fold_hl_timeout = 500,
+      fold_virt_text_handler = foldTextFormatter,
+    },
   },
 }
