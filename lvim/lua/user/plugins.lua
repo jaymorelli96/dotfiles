@@ -29,8 +29,10 @@ end
 
 lvim.plugins = {
   { "sainnhe/everforest" },
+  { "sainnhe/gruvbox-material" },
   { "morhetz/gruvbox" },
   { 'shaunsingh/nord.nvim' },
+  { 'rose-pine/neovim',        name = 'rose-pine' },
   { 'rmehri01/onenord.nvim' },
   {
     "catppuccin/nvim",
@@ -128,6 +130,8 @@ lvim.plugins = {
         end,
         desc = "Remote Flash",
       },
+      { "R",     mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" },      function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
   },
 
@@ -181,6 +185,11 @@ lvim.plugins = {
             config = {
               folds = false,
               icon_preset = "diamond",
+              icons = {
+                code_block = {
+                  conceal = true,
+                }
+              }
             }
           },                  -- Adds pretty icons to your documents
           ["core.dirman"] = { -- Manages Neorg workspaces

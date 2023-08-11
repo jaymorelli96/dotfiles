@@ -1,6 +1,9 @@
 local wk = lvim.builtin.which_key
 
 
+wk.mappings["m"] = { "<cmd>Telescope marks<cr>", "Markers" }
+wk.mappings["b"] = { "<cmd>Telescope buffers<cr>", "Buffers" }
+
 wk.mappings["n"] = {
   name = "Noice",
   d = { "<cmd>Noice dismiss<cr>", "Dismiss" },

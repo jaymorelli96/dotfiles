@@ -3,9 +3,9 @@ vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
 
 lvim.colorscheme = "nord"
 vim.g.nord_contrast = true
-vim.g.nord_borders = false
+vim.g.nord_borders = true
 vim.g.nord_disable_background = false
-vim.g.nord_italic = false
+vim.g.nord_italic = true
 vim.g.nord_uniform_diff_background = true
 vim.g.nord_bold = true
 
@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
   command = "set conceallevel=3"
 })
 
-vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldcolumn = '0' -- '0' is not bad
 vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true

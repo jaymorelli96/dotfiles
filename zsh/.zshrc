@@ -83,3 +83,5 @@ alias k3start='sudo $(which k3s) server'
    
 # Syntax highlighting - must be at the bottom of this file
 source /home/jay/Documents/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

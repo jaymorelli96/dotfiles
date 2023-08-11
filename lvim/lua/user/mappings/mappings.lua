@@ -1,10 +1,10 @@
 require("user.mappings.lsp")
 require("user.mappings.whichkey")
 
--- TERMINAL
-lvim.builtin.terminal.open_mapping = "<c-t>"
 
 -- NORMAL MODE
+lvim.keys.normal_mode["<A-9>"] = ":ToggleTerm<CR>"
+
 lvim.keys.normal_mode["<C-d>"] = "<C-d>zz"
 lvim.keys.normal_mode["<C-u>"] = "<C-u>zz"
 
