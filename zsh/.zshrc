@@ -1,14 +1,13 @@
-#Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Options
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="mm/dd/yyyy"
 export TERM="xterm-256color"
+
 #Plugins
 plugins=(git colored-man-pages z vi-mode)
+
+#Theme
+ZSH_THEME="nord-extended/nord"
 
 ## User configuration
 #To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -38,9 +37,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"   This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Source theme
-source ~/Dev/powerlevel10k/powerlevel10k.zsh-theme
-
 # Source LFCD command
 LFCD="/home/jay/bin/lfcd.sh"
 if [ -f "$LFCD" ]; then
@@ -67,10 +63,8 @@ alias vimconfig="cd ~/.config/lvim; vim"
 alias projects="cd ~/Dev/Projects/"
 alias personal="cd ~/Dev/Projects/Personal"
 alias notes="cd ~/notes; vim"
-alias iema="cd ~/Dev/Projects/iema-ws-backend; vim"
 alias antlr='java -jar ~/bin/antlr-4.7-complete.jar'
 alias vim=lvim
-alias gorun="go run ./..."
 alias ls='lsd'
 alias ll='lsd -l'
 alias la='lsd -a'
@@ -80,8 +74,11 @@ alias f='lfcd'
 alias t='todo.sh'
 alias lg='lazygit'
 alias k3start='sudo $(which k3s) server'
+alias cat='batcat'
    
+# Homebrew installation
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # Syntax highlighting - must be at the bottom of this file
 source /home/jay/Documents/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
