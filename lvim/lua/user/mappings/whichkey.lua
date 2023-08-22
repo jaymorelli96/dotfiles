@@ -45,6 +45,16 @@ wk.mappings["s"]["w"] = {
   "Search Word Under Cursor"
 }
 
+wk.mappings["g"]["t"] = {
+  "<cmd>lua require('telescope').extensions.git_worktree.git_worktrees()<cr>",
+  "Search for Worktrees"
+}
+
+wk.mappings["g"]["T"] = {
+  "<cmd>lua require('telescope').extensions.git_worktree.create_git_worktrees()<cr>",
+  "Search for Worktrees"
+}
+
 wk.mappings["W"] = {
   name = "Window Ctrl",
   h = { '<C-w>|', ' Maximize window horizontally (|)' },

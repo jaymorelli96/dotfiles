@@ -1,32 +1,3 @@
-local foldIcon = ""
-local hlgroup = "NonText"
-local function foldTextFormatter(virtText, lnum, endLnum, width, truncate)
-  local newVirtText = {}
-  local suffix = "  " .. foldIcon .. "  " .. tostring(endLnum - lnum)
-  local sufWidth = vim.fn.strdisplaywidth(suffix)
-  local targetWidth = width - sufWidth
-  local curWidth = 0
-  for _, chunk in ipairs(virtText) do
-    local chunkText = chunk[1]
-    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-    if targetWidth > curWidth + chunkWidth then
-      table.insert(newVirtText, chunk)
-    else
-      chunkText = truncate(chunkText, targetWidth - curWidth)
-      local hlGroup = chunk[2]
-      table.insert(newVirtText, { chunkText, hlGroup })
-      chunkWidth = vim.fn.strdisplaywidth(chunkText)
-      if curWidth + chunkWidth < targetWidth then
-        suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
-      end
-      break
-    end
-    curWidth = curWidth + chunkWidth
-  end
-  table.insert(newVirtText, { suffix, hlgroup })
-  return newVirtText
-end
-
 lvim.plugins = {
   { "sainnhe/everforest" },
   { "sainnhe/gruvbox-material" },
@@ -162,7 +133,13 @@ lvim.plugins = {
     ft = { "fugitive" }
   },
 
-  { "ThePrimeagen/harpoon" },
+  {
+    "ThePrimeagen/git-worktree.nvim",
+    config = function()
+      require("git-worktree").setup()
+      require("telescope").load_extension("git_worktree")
+    end
+  },
 
   {
     "windwp/nvim-spectre",
@@ -178,29 +155,7 @@ lvim.plugins = {
     build = ":Neorg sync-parsers",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("neorg").setup {
-        load = {
-          ["core.defaults"] = {}, -- Loads default behaviour
-          ["core.concealer"] = {
-            config = {
-              folds = false,
-              icon_preset = "diamond",
-              icons = {
-                code_block = {
-                  conceal = true,
-                }
-              }
-            }
-          },                  -- Adds pretty icons to your documents
-          ["core.dirman"] = { -- Manages Neorg workspaces
-            config = {
-              workspaces = {
-                notes = "~/notes",
-              },
-            },
-          },
-        },
-      }
+      require("user.configs.neorg")
     end,
   },
 
@@ -208,20 +163,6 @@ lvim.plugins = {
     "kevinhwang91/nvim-ufo",
     dependencies = "kevinhwang91/promise-async",
     event = "BufReadPost",
-    opts = {
-      provider_selector = function(_, ft, _)
-        local lspWithOutFolding = { "markdown", "bash", "sh", "bash", "zsh", "css" }
-        if vim.tbl_contains(lspWithOutFolding, ft) then
-          return { "treesitter", "indent" }
-        else
-          return { "lsp", "indent" }
-        end
-      end,
-      -- open opening the buffer, close these fold kinds
-      -- use `:UfoInspect` to get available fold kinds from the LSP
-      close_fold_kinds = { "imports" },
-      open_fold_hl_timeout = 500,
-      fold_virt_text_handler = foldTextFormatter,
-    },
+    opts = require("user.configs.ufo"),
   },
 }
