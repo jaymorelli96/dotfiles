@@ -15,6 +15,8 @@ lvim.plugins = {
     end
   },
 
+  { 'dense-analysis/ale' },
+
   {
     'akinsho/toggleterm.nvim',
     version = "*",
