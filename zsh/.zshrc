@@ -2,12 +2,13 @@
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="mm/dd/yyyy"
 export TERM="xterm-256color"
+export BAT_THEME="Nord"
 
 #Plugins
 plugins=(git colored-man-pages z vi-mode)
 
 #Theme
-ZSH_THEME="nord-extended/nord"
+ZSH_THEME="robbyrussell"
 
 ## User configuration
 #To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -51,20 +52,22 @@ export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/.local/bin"
+export KUBECONFIG=~/.kube/config
 source $ZSH/oh-my-zsh.sh
 
 # Default editor
-export EDITOR='lvim'
-export VISUAL='lvim'
+export EDITOR='nvim'
+export K9S_EDITOR='nvim'
+export VISUAL='nvim'
 
 ## Aliases
 alias zshconfig="vim ~/.zshrc"
-alias vimconfig="cd ~/.config/lvim; vim"
+alias vimconfig="cd ~/.config/nvim; nvim"
+alias notes="cd /mnt/c/Users/z004t9es/Documents/notes; vim"
 alias projects="cd ~/Dev/Projects/"
 alias personal="cd ~/Dev/Projects/Personal"
-alias notes="cd ~/notes; vim"
 alias antlr='java -jar ~/bin/antlr-4.7-complete.jar'
-alias vim=lvim
+alias vim=nvim
 alias ls='lsd'
 alias ll='lsd -l'
 alias la='lsd -a'
@@ -74,11 +77,17 @@ alias f='lfcd'
 alias t='todo.sh'
 alias lg='lazygit'
 alias k3start='sudo $(which k3s) server'
-alias cat='batcat'
+alias cat='bat'
+
+# Keep directory when creating new instance
+keep_current_path() {
+  printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+}
+precmd_functions+=(keep_current_path)
+
+# Kubebuilder completion
+source /home/jay/dev/plugins/kubebuilder-completion.zsh
+source <(kubectl completion zsh)
    
-# Homebrew installation
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # Syntax highlighting - must be at the bottom of this file
-source /home/jay/Documents/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+source /home/jay/dev/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

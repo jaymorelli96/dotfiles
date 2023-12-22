@@ -15,15 +15,14 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 	['<CR>'] = cmp.mapping.confirm({ select = false }),
 
 	-- Tab to trigger completion menu
-	['<Tab>'] = cmp.mapping.complete(),
+	['<C-space>'] = cmp.mapping.complete(),
 
 	-- Cycle through
-	['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-	['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+	['<Tab>'] = cmp.mapping.select_next_item(cmp_select),
 
 	-- Navigate between snippet placeholder
-	['<C-f>'] = cmp_action.luasnip_jump_forward(),
-	['<C-b>'] = cmp_action.luasnip_jump_backward(),
+	['<C-n>'] = cmp_action.luasnip_jump_forward(),
+	['<C-p>'] = cmp_action.luasnip_jump_backward(),
 })
 
 lsp.setup_nvim_cmp({
@@ -33,14 +32,25 @@ lsp.setup_nvim_cmp({
 lsp.on_attach(function(client, bufnr)
 	local opts = { buffer = bufnr, remap = false }
 
-	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-	vim.keymap.set("n", "grr", function() vim.lsp.buf.definition() end, opts)
+	lsp.default_keymaps({
+		buffer = bufnr,
+		omit = { 'gs', 'K' },
+	})
+
+	vim.keymap.set("n", "J", ":m .+1<CR>==", opts)
+	vim.keymap.set("n", "K", ":m .-2<CR>==", opts)
+
+	vim.keymap.set("n", "gd", function() require("telescope.builtin").lsp_definitions() end, opts)
+	vim.keymap.set("n", "grr", function() require("telescope.builtin").lsp_references() end, opts)
+	vim.keymap.set("n", "gi", function() require("telescope.builtin").lsp_implementations() end, opts)
+	vim.keymap.set("n", "gq", function() require("telescope.builtin").quickfix() end, opts)
 	vim.keymap.set("n", "gk", function() vim.lsp.buf.hover() end, opts)
 	vim.keymap.set("n", "ge", function() vim.diagnostic.open_float() end, opts)
 	vim.keymap.set("n", "ga", function() vim.lsp.buf.code_action() end, opts)
 	vim.keymap.set("n", "grn", function() vim.lsp.buf.rename() end, opts)
 	vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
+
 
 
 lsp.setup()

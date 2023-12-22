@@ -27,25 +27,25 @@ local function foldTextFormatter(virtText, lnum, endLnum, width, truncate)
 	return newVirtText
 end
 
-local M =  {
-	"kevinhwang91/nvim-ufo",
-	dependencies = "kevinhwang91/promise-async",
-	event = "BufReadPost",
-	opts = {
-		provider_selector = function(_, ft, _)
-			local lspWithOutFolding = { "markdown", "bash", "sh", "bash", "zsh", "css" }
-			if vim.tbl_contains(lspWithOutFolding, ft) then
-				return { "treesitter", "indent" }
-			else
-				return { "lsp", "indent" }
-			end
-		end,
-		-- open opening the buffer, close these fold kinds
-		-- use `:UfoInspect` to get available fold kinds from the LSP
-		close_fold_kinds = { "imports" },
-		open_fold_hl_timeout = 500,
-		fold_virt_text_handler = foldTextFormatter,
-	},
+local M = {
+	-- "kevinhwang91/nvim-ufo",
+	-- dependencies = "kevinhwang91/promise-async",
+	-- event = "BufReadPost",
+	-- opts = {
+	-- 	provider_selector = function(_, ft, _)
+	-- 		local lspWithOutFolding = { "markdown", "bash", "sh", "bash", "zsh", "css" }
+	-- 		if vim.tbl_contains(lspWithOutFolding, ft) then
+	-- 			return { "treesitter", "indent" }
+	-- 		else
+	-- 			return { "lsp", "indent" }
+	-- 		end
+	-- 	end,
+	-- 	-- open opening the buffer, close these fold kinds
+	-- 	-- use `:UfoInspect` to get available fold kinds from the LSP
+	-- 	close_fold_kinds = { "imports" },
+	-- 	open_fold_hl_timeout = 500,
+	-- 	fold_virt_text_handler = foldTextFormatter,
+	-- },
 }
 
 
