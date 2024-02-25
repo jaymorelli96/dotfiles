@@ -1,19 +1,10 @@
 local opt = vim.opt
-local global = vim.g
 
--- Colorscheme
-function ColorMyPencils(color)
-	color = color or "nord"
-	-- color = color or "catppuccin-latte"
-	vim.cmd.colorscheme(color)
+vim.cmd [[colorscheme nord]]
 
-	-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-	-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-end
-
-ColorMyPencils()
 
 -- Editor
+opt.cmdheight = 1
 opt.relativenumber = true
 opt.cursorline = true
 opt.nu = true
@@ -38,11 +29,13 @@ opt.updatetime = 50
 
 opt.spelllang = "en_us"
 
-opt.textwidth = 0
-opt.wrapmargin = 0
-opt.wrap = true
-opt.linebreak = true
-opt.columns = 120
+-- opt.textwidth = 0
+-- opt.wrapmargin = 0
+-- opt.wrap = true
+-- opt.linebreak = true
+-- opt.columns = 120
+
+opt.conceallevel = 1
 
 -- Windows Clipboard win32yank Options
 opt.clipboard = "unnamedplus"
@@ -104,6 +97,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 });
 
+-- import on ts files on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = vim.api.nvim_create_augroup("TS_add_missing_imports", { clear = true }),
+	desc = "TS_add_missing_imports",
+	pattern = { "*.ts" },
+	callback = function()
+		vim.lsp.buf.code_action({
+			apply = true,
+			context = {
+				only = { "source.addMissingImports.ts" },
+			},
+		})
+		vim.cmd("write")
+	end,
+})
+
 
 -- copilot
 vim.g.copilot_no_tab_map = true
@@ -120,3 +129,34 @@ vim.g.copilot_filetypes = {
 	["go"] = true,
 	["python"] = true,
 }
+
+-- Functions
+--
+-- Toggle line break and width
+-- Define toggle_config function
+function Toggle_line_width()
+	-- Check if any of the options are set to their default values
+	if vim.o.textwidth == 0 and
+			vim.o.wrapmargin == 0 and
+			vim.o.wrap == true and
+			vim.o.linebreak == true and
+			vim.o.columns == 120 then
+		-- If they are, set custom values
+		vim.o.textwidth = 80
+		vim.o.wrapmargin = 2
+		vim.o.wrap = false
+		vim.o.linebreak = false
+		vim.o.columns = 80
+		print("Custom configuration enabled.")
+	else
+		-- Otherwise, set them back to their default values
+		vim.o.textwidth = 0
+		vim.o.wrapmargin = 0
+		vim.o.wrap = true
+		vim.o.linebreak = true
+		vim.o.columns = 120
+		print("Default configuration restored.")
+	end
+end
+
+vim.cmd("command! ToggleLineWidth lua Toggle_line_width()")

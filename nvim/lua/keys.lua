@@ -1,10 +1,16 @@
-vim.g.mapleader = " "
+local wk = require("which-key")
+
+wk.register({
+	o = {
+		name = "Obsidian", -- optional group name
+		t = { "<cmd>lua require('obsidian').util.toggle_checkbox()<cr>", "Find File" },
+	}
+}, { prefix = "<leader>" })
 
 -- Silent keymap option
 local opts = { silent = true }
 
 local keymap = vim.keymap.set
-
 -- CORE
 keymap("n", "<leader>w", ":w<CR>", opts)
 keymap("n", "<leader>c", ":bd!<CR>", opts)
@@ -77,6 +83,9 @@ keymap("n", "<leader>m", ":lua vim.lsp.semantic_tokens.get_at_pos()", opts)
 -- illuminate
 keymap("n", "<leader>n", ":lua require('illuminate').goto_next_reference(wrap)<cr>", opts)
 keymap("n", "<leader>N", ":lua require('illuminate').goto_prev_reference(wrap)<cr>", opts)
+
+-- frecency
+keymap("n", "<leader><leader>", ":Telescope frecency<cr>", opts)
 
 -- spell
 function ToggleSpell()

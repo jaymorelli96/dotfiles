@@ -44,6 +44,8 @@ lsp.on_attach(function(client, bufnr)
 	vim.keymap.set("n", "grr", function() require("telescope.builtin").lsp_references() end, opts)
 	vim.keymap.set("n", "gi", function() require("telescope.builtin").lsp_implementations() end, opts)
 	vim.keymap.set("n", "gq", function() require("telescope.builtin").quickfix() end, opts)
+	vim.keymap.set("n", "gnd", function() vim.diagnostic.goto_next() end, opts)
+	vim.keymap.set("n", "gpd", function() vim.diagnostic.goto_prev() end, opts)
 	vim.keymap.set("n", "gk", function() vim.lsp.buf.hover() end, opts)
 	vim.keymap.set("n", "ge", function() vim.diagnostic.open_float() end, opts)
 	vim.keymap.set("n", "ga", function() vim.lsp.buf.code_action() end, opts)
@@ -52,5 +54,14 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 
+require("lspconfig").ltex.setup {
+	on_attach = function(client, bufnr)
+		-- rest of your on_attach process.
+		require("ltex_extra").setup {}
+	end,
+	settings = {
+		ltex = {}
+	}
+}
 
 lsp.setup()
