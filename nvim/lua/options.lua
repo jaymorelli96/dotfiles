@@ -1,3 +1,9 @@
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+vim.g.loaded_tutor_mode_plugin = 1
+
 -- [[ Global Options ]]
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -78,6 +84,29 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- Open Neo-tree on VimEnter
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   callback = function()
+--     require('neo-tree.command').execute { action = 'show' }
+--   end,
+-- })
+--
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = vim.api.nvim_create_augroup('Neotree_start_directory', { clear = true }),
+  desc = 'Start Neo-tree with directory',
+  once = true,
+  callback = function()
+    if package.loaded['neo-tree'] then
+      return
+    else
+      local stats = vim.uv.fs_stat(vim.fn.argv(0))
+      if stats and stats.type == 'directory' then
+        require 'neo-tree'
+      end
+    end
   end,
 })
 
