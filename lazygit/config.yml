@@ -1,0 +1,10 @@
+# Config relating to the Lazygit UI
+gui:
+  # Config relating to colors and styles.
+  # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#color-attributes
+  theme:
+    # Border color of focused window
+    activeBorderColor:
+      - blue
+      - bold
+  nerdFontsVersion: "3"
