@@ -30,14 +30,28 @@ vim.api.nvim_set_hl(0, 'DiffAdd', { fg = '#a3be8c' })
 vim.api.nvim_set_hl(0, 'DiffChange', { fg = '#ebcb8b' })
 vim.api.nvim_set_hl(0, 'DiffDelete', { fg = '#bf616a' })
 
+vim.api.nvim_set_hl(0, 'DropBarIconUIPickPivot', { fg = '#88c0d0' })
+vim.api.nvim_set_hl(0, 'DropBarMenuHoverEntry', { fg = '#88c0d0' })
+vim.api.nvim_set_hl(0, 'DropBarMenuCurrentContext', { fg = '#4c566a' })
+vim.api.nvim_set_hl(0, 'DropBarMenuHoverIcon', { reverse = false, bg = 'none', fg = '#ebcb8b' })
+vim.api.nvim_set_hl(0, 'DropBarMenuNormalFloat', { bg = '#3b4252' })
+vim.api.nvim_set_hl(0, 'DropBarMenuFloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
+
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
+
 -- [[ Setting options ]]
 local opt = vim.opt
+
+-- true colors for terminal
+opt.termguicolors = true
 
 opt.number = true
 
 opt.mouse = 'a'
 
 opt.showmode = false -- Don't show the mode, since it's already in the status line
+
+opt.laststatus = 0
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -67,9 +81,10 @@ opt.timeoutlen = 500
 opt.splitright = true
 opt.splitbelow = true
 
--- Sets how neovim will display certain whitespace characters in the editor.
-opt.list = false
-opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.bo.softtabstop = 4
 
 -- Preview substitutions live, as you type!
 opt.inccommand = 'split'
@@ -77,11 +92,36 @@ opt.inccommand = 'split'
 -- Show which line your cursor is on
 opt.cursorline = true
 
+vim.opt.guicursor = 'n-v-c-i:block'
+
+-- Enable cursor line
+vim.opt.cursorline = true
+-- Enable cursor line
+vim.opt.cursorline = true
+
+-- Set the default cursor line color for Normal mode
+vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#3b4252' })
+
+-- Create a new augroup to group the autocmds
+local group = vim.api.nvim_create_augroup('ChangeCursorLineColor', { clear = true })
+
+-- Autocommand for Insert mode
+vim.api.nvim_create_autocmd('InsertEnter', {
+  group = group,
+  callback = function()
+    vim.api.nvim_set_hl(0, 'CursorLine', { bg = 'none' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('InsertLeave', {
+  group = group,
+  callback = function()
+    vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#3b4252' })
+  end,
+})
+
 -- Minimal number of screen lines to keep above and below the cursor.
 opt.scrolloff = 10
-
--- true colors for terminal
-opt.termguicolors = true
 
 -- [[ Basic Autocommands ]]
 -- Highlight when yanking text
@@ -112,3 +152,19 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+
+if vim.fn.has 'wsl' == 1 then
+  vim.g.clipboard = {
+    name = 'WslClipboard',
+    copy = {
+      ['+'] = 'clip.exe',
+      ['*'] = 'clip.exe',
+    },
+    paste = {
+      ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+      ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    },
+    cache_enable = 0,
+  }
+end

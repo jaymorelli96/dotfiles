@@ -4,6 +4,18 @@ return {
   event = 'VeryLazy',
   config = function()
     require('incline').setup {
+      highlight = {
+        groups = {
+          InclineNormal = {
+            default = true,
+            group = 'NormalFloatIncline',
+          },
+          InclineNormalNC = {
+            default = true,
+            group = 'NormalFloatIncline',
+          },
+        },
+      },
       window = {
         margin = {
           horizontal = 1,
@@ -42,7 +54,10 @@ return {
           if vim.v.shell_error ~= 0 then
             return ''
           end
-          return branch
+          if branch == '' then
+            return ''
+          end
+          return ' ' .. branch .. ' '
         end
 
         local function get_git_diff()
@@ -82,8 +97,7 @@ return {
         return {
           { modified(), group = 'SpecialChar' },
           { get_diagnostic_label() },
-          { (' ' .. get_git_branch()) or '', group = 'SpecialChar' },
-          { '  ', group = 'String' },
+          { get_git_branch() or '', group = 'SpecialChar' },
           {
             get_git_diff(),
             guibg = 'none',

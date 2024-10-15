@@ -10,6 +10,7 @@ wk.add {
   { '<leader>f', group = '[F]ile' },
   { '<leader>s', group = '[S]earch' },
   { '<leader>ss', group = '[S]ymbols' },
+  { '<leader>sh', group = '[H]elp' },
   { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
   { '<leader>gh', group = '[H]unk', mode = { 'n', 'v' } },
   { '<leader>gt', group = '[T]oggle', mode = { 'n', 'v' } },
@@ -72,3 +73,4 @@ local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_p
 
 vim.keymap.set({ 'n', 'x', 'o' }, 'gnh', next_hunk_repeat, { desc = '[G]o To [N]ext [H]unk' })
 vim.keymap.set({ 'n', 'x', 'o' }, 'gph', prev_hunk_repeat, { desc = '[G]o To [P]revious [H]unk' })
+vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'Lazy[G]it' })
