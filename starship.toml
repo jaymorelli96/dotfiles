@@ -1,18 +1,68 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
+format = """
+$home\
+$directory\
+$all\
+$git_branch\
+$git_status\
+$fill\
+[](fg:black)\
+${custom.live-clock-icon}\
+$time\
+[](fg:black)\
+\n$character"""
+
 add_newline = false
 
-# Move the directory and character prompt to the first line
-format = '$character$home$directory$all'
+[line_break]
+disabled = true
 
 # Replace the '❯' symbol in the prompt with '➜'
 [character] # The name of the module we are configuring is 'character'
-success_symbol = '[](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
-error_symbol = '[](bold red)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+success_symbol = '[󱞪](bold cyan)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+error_symbol = '[󱞪](bold red)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+vimcmd_symbol = '[](bold cyan)'
+
+[fill]
+symbol = " "
+
+[git_status]
+untracked = "[ ](yellow)"
+modified = "[ ](red)"
+staged = "[ ](green)"
+deleted = "[ ](red)"
+ahead = "[ ](yellow)"
+behind = "[ ](yellow)"
+diverged = "[󰦻 ](yellow)"
+conflicted = "[! ](red)"
+stashed = ""
+typechanged = ""
+renamed = ""
+up_to_date = ""
+format = '$all_status$ahead_behind'
+
+[git_branch]
+symbol = "[](#5e81ac)"
+style = "fg:white bg:#5e81ac"
+format = '[$symbol $branch]($style)[ ](#5e81ac)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:#5e81ac bg:black"
+format = '[$time]($style)'
+
+[custom.live-clock-icon]
+command = 'echo "" | cut -c $(($(date +%H)%12+1))'
+description = "Live updating clock icon, changes hourly. Icons can be customized to your liking."
+when = true
+style = "fg:#5e81ac bg:black"
+format = "[$output ]($style)"
 
 [aws]
-disabled = true
+disabled = false
 
 [buf]
 symbol = " "
@@ -47,11 +97,13 @@ symbol = " "
 [fossil_branch]
 symbol = " "
 
-[git_branch]
-symbol = " "
+# [git_branch]
+# symbol = " "
+
 
 [golang]
 symbol = " "
+format = "[$symbol]($style)"
 
 [guix_shell]
 symbol = " "
@@ -79,6 +131,7 @@ symbol = " "
 
 [lua]
 symbol = " "
+format = "[$symbol]($style)"
 
 [memory_usage]
 symbol = "󰍛 "
@@ -97,6 +150,9 @@ symbol = " "
 
 [ocaml]
 symbol = " "
+
+[cmd_duration]
+disabled = true
 
 [os.symbols]
 Alpaquita = " "
