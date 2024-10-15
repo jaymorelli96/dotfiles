@@ -1,9 +1,3 @@
--- Disable netrw
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
-vim.g.loaded_tutor_mode_plugin = 1
-
 -- [[ Global Options ]]
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -11,6 +5,14 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 vim.o.cmdheight = 0
+
+vim.opt.autowriteall = true -- autosave
+
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+vim.g.loaded_tutor_mode_plugin = 1
 
 -- [[ Highlight Groups ]]
 vim.api.nvim_set_hl(0, 'TelescopeBorder', { fg = '#5e81ac' })
@@ -23,6 +25,10 @@ vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, '@lsp.type.enumMember', { fg = '#5e81ac' })
+
+vim.api.nvim_set_hl(0, 'DiffAdd', { fg = '#a3be8c' })
+vim.api.nvim_set_hl(0, 'DiffChange', { fg = '#ebcb8b' })
+vim.api.nvim_set_hl(0, 'DiffDelete', { fg = '#bf616a' })
 
 -- [[ Setting options ]]
 local opt = vim.opt
@@ -87,13 +93,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Open Neo-tree on VimEnter
--- vim.api.nvim_create_autocmd('VimEnter', {
---   callback = function()
---     require('neo-tree.command').execute { action = 'show' }
---   end,
--- })
---
 vim.api.nvim_create_autocmd('BufEnter', {
   group = vim.api.nvim_create_augroup('Neotree_start_directory', { clear = true }),
   desc = 'Start Neo-tree with directory',
@@ -102,6 +101,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
     if package.loaded['neo-tree'] then
       return
     else
+      ---@diagnostic disable-next-line: param-type-mismatch
       local stats = vim.uv.fs_stat(vim.fn.argv(0))
       if stats and stats.type == 'directory' then
         require 'neo-tree'

@@ -41,13 +41,5 @@ return { -- Useful plugin to show you pending keybinds.
         F12 = '<F12>',
       },
     },
-
-    -- Document existing key chains
-    spec = {
-      { '<leader>f', group = '[F]ile' },
-      { '<leader>s', group = '[S]earch' },
-      { '<leader>t', group = '[T]oggle' },
-      { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
-    },
   },
 }

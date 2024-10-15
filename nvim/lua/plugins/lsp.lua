@@ -55,10 +55,6 @@ return {
           --  the definition of its *type*, not where it was *defined*.
           map('gD', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
 
-          -- Rename the variable under your cursor.
-          --  Most Language Servers support renaming across files, etc.
-          map('gn', vim.lsp.buf.rename, 'Go Re[n]ame')
-
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('ga', vim.lsp.buf.code_action, 'Go Code [A]ction', { 'n', 'x' })
@@ -97,7 +93,7 @@ return {
           --
           -- This may be unwanted, since they displace some of your code
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-            map('<leader>th', function()
+            map('<leader>cth', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
