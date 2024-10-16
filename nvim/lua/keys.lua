@@ -15,17 +15,18 @@ wk.add {
   { '<leader>gh', group = '[H]unk', mode = { 'n', 'v' } },
   { '<leader>gt', group = '[T]oggle', mode = { 'n', 'v' } },
   { '<leader>x', group = 'Trouble', mode = { 'n', 'v' } },
+
+  { 'gn', group = '[G]o [N]ext' },
+  { 'gp', group = '[G]o [P]revious' },
 }
 -- Modify files
 vim.keymap.set('n', '<leader>fc', '<cmd>close<CR>', { desc = '[F]ile [C]lose' })
 vim.keymap.set('n', '<leader>fw', '<cmd>w<CR>', { desc = '[F]ile [W]rite' })
-vim.keymap.set('n', '<leader>fq', '<cmd>xa<CR>', { desc = '[F]ile [Q]uit' })
+vim.keymap.set('n', '<leader>fq', 'ZZ', { desc = '[Q]uit and Save All' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[F]ile [Q]uit' })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = '[Q]uickfix list' })
 
 -- Code
 vim.keymap.set('n', '<leader>cn', vim.lsp.buf.rename, { desc = 'Re[n]ame' })
@@ -74,3 +75,10 @@ local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_p
 vim.keymap.set({ 'n', 'x', 'o' }, 'gnh', next_hunk_repeat, { desc = '[G]o To [N]ext [H]unk' })
 vim.keymap.set({ 'n', 'x', 'o' }, 'gph', prev_hunk_repeat, { desc = '[G]o To [P]revious [H]unk' })
 vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'Lazy[G]it' })
+
+vim.keymap.set('n', 'gm', '%', { desc = '[G]o To [M]atching Parentheses' })
+vim.keymap.set('n', 'ge', function()
+  vim.diagnostic.open_float()
+end, { desc = '[G]o To [E]rror/Diagnostic' })
+vim.keymap.set('n', 'gt', vim.diagnostic.goto_next, { desc = '[G]o To Next [T]rouble' })
+vim.keymap.set('n', 'gT', vim.diagnostic.goto_prev, { desc = '[G]o to Previous [T]rouble' })

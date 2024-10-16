@@ -37,6 +37,8 @@ vim.api.nvim_set_hl(0, 'DropBarMenuHoverIcon', { reverse = false, bg = 'none', f
 vim.api.nvim_set_hl(0, 'DropBarMenuNormalFloat', { bg = '#3b4252' })
 vim.api.nvim_set_hl(0, 'DropBarMenuFloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
 
+vim.api.nvim_set_hl(0, 'NoicePopupmenuBorder', { bg = '#2e3440', fg = '#a3be8c' })
+
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
 
 -- [[ Setting options ]]
@@ -168,3 +170,112 @@ if vim.fn.has 'wsl' == 1 then
     cache_enable = 0,
   }
 end
+
+vim.diagnostic.config {
+  float = { border = 'rounded' },
+}
+
+-- Customize diagnostic signs (icons) for the sidebar
+vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
+vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
+vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
+vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
+
+-- wrap open_float to inspect diagnostics and use the severity color for border
+-- https://neovim.discourse.group/t/lsp-diagnostics-how-and-where-to-retrieve-severity-level-to-customise-border-color/1679
+vim.diagnostic.open_float = (function(orig)
+  return function(bufnr, opts)
+    local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local opts = opts or {}
+    -- A more robust solution would check the "scope" value in `opts` to
+    -- determine where to get diagnostics from, but if you're only using
+    -- this for your own purposes you can make it as simple as you like
+    local diagnostics = vim.diagnostic.get(opts.bufnr or 0, { lnum = lnum })
+    local max_severity = vim.diagnostic.severity.HINT
+    for _, d in ipairs(diagnostics) do
+      -- Equality is "less than" based on how the severities are encoded
+      if d.severity < max_severity then
+        max_severity = d.severity
+      end
+    end
+    local border_color = ({
+      [vim.diagnostic.severity.HINT] = 'DiagnosticHint',
+      [vim.diagnostic.severity.INFO] = 'DiagnosticInfo',
+      [vim.diagnostic.severity.WARN] = 'DiagnosticWarn',
+      [vim.diagnostic.severity.ERROR] = 'DiagnosticError',
+    })[max_severity]
+
+    -- Custom format function
+    opts.format = function(diagnostic)
+      -- Define symbols for each diagnostic severity
+      local severity_symbols = {
+        [vim.diagnostic.severity.ERROR] = '', -- Error symbol
+        [vim.diagnostic.severity.WARN] = '', -- Warning symbol
+        [vim.diagnostic.severity.INFO] = '', -- Info symbol
+        [vim.diagnostic.severity.HINT] = '', -- Hint symbol
+      }
+
+      -- Get the severity symbol and format the message
+      local severity_symbol = severity_symbols[diagnostic.severity] or ''
+      local source = diagnostic.source or 'Unknown' -- Get diagnostic source if available
+      local msg = diagnostic.message
+      local formatted_msg = ''
+
+      -- Function to wrap long lines at 100 characters, while preserving existing line breaks
+      local function wrap_line(line, width)
+        local wrapped_lines = {}
+        -- Process the line, wrapping it if it's too long
+        while #line > width do
+          table.insert(wrapped_lines, line:sub(1, width) .. ' ') -- Take the first 'width' characters
+          line = line:sub(width + 1) -- Continue with the rest of the line
+        end
+        table.insert(wrapped_lines, line) -- Add the remaining part of the line
+        return table.concat(wrapped_lines, '\n\t') -- Return the wrapped line
+      end
+
+      -- Process each line separately, preserving existing newlines
+      for line in msg:gmatch '[^\r\n]+' do
+        -- If the line exceeds 100 characters, wrap it
+        if #line > 100 then
+          formatted_msg = formatted_msg .. wrap_line(line, 100) .. ' \n\t'
+        else
+          formatted_msg = formatted_msg .. line .. ' \n\t' -- Otherwise, keep it as is
+        end
+      end
+
+      formatted_msg = formatted_msg:gsub('%s*\n$', '')
+
+      -- Now `formatted_msg` contains the full message with line breaks every 126 characters
+      return string.format('%s [%s] %s', severity_symbol, source, formatted_msg)
+    end
+    opts.severity_sort = true
+    opts.source = false
+    opts.header = ' '
+    opts.prefix = ' '
+    opts.suffix = ' '
+    opts.border = {
+      { '╭', border_color },
+      { '─', border_color },
+      { '╮', border_color },
+      { '│', border_color },
+      { '╯', border_color },
+      { '─', border_color },
+      { '╰', border_color },
+      { '│', border_color },
+    }
+
+    orig(bufnr, opts)
+  end
+end)(vim.diagnostic.open_float)
+
+-- Show line diagnostics in floating popup on hover, except insert mode (CursorHoldI)
+vim.o.updatetime = 250
+vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float()]]
+
+-- Show source in diagnostics, not inline but as a floating popup
+vim.diagnostic.config {
+  virtual_text = false,
+  float = {
+    source = true, -- Or "if_many"
+  },
+}

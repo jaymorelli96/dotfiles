@@ -13,9 +13,6 @@ return {
   end,
   opts = {
     menu = {
-      scrollbar = {
-        enable = false,
-      },
       win_configs = {
         border = 'string',
         width = 2,
