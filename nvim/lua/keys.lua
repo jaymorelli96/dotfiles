@@ -1,6 +1,15 @@
 -- Better escape
 vim.keymap.set('i', 'jk', '<Esc>')
 
+-- swap P and p in visual mode (deleted word doesn't stay in the register)
+vim.api.nvim_set_keymap('v', 'p', '<S-p>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<S-p>', 'p', { noremap = true, silent = true })
+
+-- Save text to register c before changing, and preserve default register
+vim.api.nvim_set_keymap('n', 'c', '"c"0c', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'C', '"c"0C', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', 'c', '"c"0c', { noremap = true, silent = true })
+
 -- which key
 local wk = require 'which-key'
 
@@ -8,12 +17,13 @@ wk.add {
   { '<leader>c', group = '[C]ode' },
   { '<leader>ct', group = '[T]oggle' },
   { '<leader>f', group = '[F]ile' },
-  { '<leader>s', group = '[S]earch' },
-  { '<leader>ss', group = '[S]ymbols' },
-  { '<leader>sh', group = '[H]elp' },
   { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
   { '<leader>gh', group = '[H]unk', mode = { 'n', 'v' } },
   { '<leader>gt', group = '[T]oggle', mode = { 'n', 'v' } },
+  { '<leader>s', group = '[S]earch' },
+  { '<leader>ss', group = '[S]ymbols' },
+  { '<leader>sh', group = '[H]elp' },
+  { '<leader>t', group = '[T]est' },
   { '<leader>x', group = 'Trouble', mode = { 'n', 'v' } },
 
   { 'gn', group = '[G]o [N]ext' },
@@ -21,9 +31,8 @@ wk.add {
 }
 -- Modify files
 vim.keymap.set('n', '<leader>fc', '<cmd>close<CR>', { desc = '[F]ile [C]lose' })
-vim.keymap.set('n', '<leader>fw', '<cmd>w<CR>', { desc = '[F]ile [W]rite' })
-vim.keymap.set('n', '<leader>fq', 'ZZ', { desc = '[Q]uit and Save All' })
-vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[F]ile [Q]uit' })
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = '[W]rite' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[Q]uit' })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -82,3 +91,27 @@ vim.keymap.set('n', 'ge', function()
 end, { desc = '[G]o To [E]rror/Diagnostic' })
 vim.keymap.set('n', 'gt', vim.diagnostic.goto_next, { desc = '[G]o To Next [T]rouble' })
 vim.keymap.set('n', 'gT', vim.diagnostic.goto_prev, { desc = '[G]o to Previous [T]rouble' })
+
+-- toggle split full screen
+-- Store the previous window size
+local is_maximized = false
+local last_win_height = vim.api.nvim_win_get_height(0)
+local last_win_width = vim.api.nvim_win_get_width(0)
+
+function ToggleMaximizeWindow()
+  if not is_maximized then
+    -- Maximize the current window
+    last_win_height = vim.api.nvim_win_get_height(0)
+    last_win_width = vim.api.nvim_win_get_width(0)
+    vim.cmd 'resize'
+    vim.cmd 'vertical resize'
+    is_maximized = true
+  else
+    -- Restore the previous window size
+    vim.cmd('resize ' .. last_win_height)
+    vim.cmd('vertical resize ' .. last_win_width)
+    is_maximized = false
+  end
+end
+-- Bind <leader>m to toggle the window maximization
+vim.api.nvim_set_keymap('n', '<leader>m', ':lua ToggleMaximizeWindow()<CR>', { noremap = true, silent = true })

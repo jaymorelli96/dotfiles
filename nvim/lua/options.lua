@@ -1,18 +1,15 @@
--- [[ Global Options ]]
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
 vim.g.have_nerd_font = true
 
 vim.o.cmdheight = 0
 
 vim.opt.autowriteall = true -- autosave
-
 -- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.g.loaded_tutor_mode_plugin = 1
+
+vim.g.cursorhold_updatetime = 100
 
 -- [[ Highlight Groups ]]
 vim.api.nvim_set_hl(0, 'TelescopeBorder', { fg = '#5e81ac' })
@@ -41,11 +38,17 @@ vim.api.nvim_set_hl(0, 'NoicePopupmenuBorder', { bg = '#2e3440', fg = '#a3be8c' 
 
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
 
+vim.api.nvim_set_hl(0, 'Folded', { bg = '#3b4252', fg = '#5e81ac' })
+
+vim.api.nvim_set_hl(0, 'NeotestAdapterName', { fg = '#ebcb8b', bold = true })
+vim.api.nvim_set_hl(0, 'NeotestDirectory', { fg = '#e5e9f0' })
+vim.api.nvim_set_hl(0, 'NeotestDir', { fg = '#81a1c1', bold = true })
+vim.api.nvim_set_hl(0, 'NeotestFile', { fg = '#81a1c1' })
+vim.api.nvim_set_hl(0, 'NeotestTest', { fg = '#d8dee9' })
+vim.api.nvim_set_hl(0, 'NeotestFocused', { fg = '#81a1c1' })
+
 -- [[ Setting options ]]
 local opt = vim.opt
-
--- true colors for terminal
-opt.termguicolors = true
 
 opt.number = true
 
@@ -171,10 +174,6 @@ if vim.fn.has 'wsl' == 1 then
   }
 end
 
-vim.diagnostic.config {
-  float = { border = 'rounded' },
-}
-
 -- Customize diagnostic signs (icons) for the sidebar
 vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
 vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
@@ -268,14 +267,51 @@ vim.diagnostic.open_float = (function(orig)
   end
 end)(vim.diagnostic.open_float)
 
--- Show line diagnostics in floating popup on hover, except insert mode (CursorHoldI)
-vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float()]]
+vim.keymap.set('n', 'ge', function()
+  vim.diagnostic.open_float()
+end, { desc = '[G]o to [E]rrors/Diagnostics' })
 
--- Show source in diagnostics, not inline but as a floating popup
-vim.diagnostic.config {
-  virtual_text = false,
-  float = {
-    source = true, -- Or "if_many"
-  },
-}
+-- fold
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldlevel = 99
+vim.o.foldcolumn = '1'
+vim.o.foldenable = false
+vim.o.fillchars = 'fold: ' -- Set fold fill character to space (removes dots)
+function CustomFoldText()
+  local line = vim.fn.getline(vim.v.foldstart)
+  local lines_count = vim.v.foldend - vim.v.foldstart + 1
+  return ' ⮞ ' .. line .. ' ...' .. ' (' .. lines_count .. ' lines)'
+end
+
+vim.o.foldtext = 'v:lua.CustomFoldText()'
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'help', 'startuptime', 'qf', 'lspinfo', 'checkhealth', 'neotest-output', 'neotest-summary' }, -- Add any additional filetypes here
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':close<CR>', { noremap = true, silent = true })
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*.go',
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { 'source.organizeImports' } }
+    -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+    -- machine and codebase, you may want longer. Add an additional
+    -- argument after params if you find that you have to write the file
+    -- twice for changes to be saved.
+    -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params)
+    for cid, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
+          vim.lsp.util.apply_workspace_edit(r.edit, enc)
+        end
+      end
+    end
+    vim.lsp.buf.format { async = false }
+  end,
+})

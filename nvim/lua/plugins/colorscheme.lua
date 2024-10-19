@@ -1,10 +1,18 @@
 return {
-  'gbprod/nord.nvim',
+  'shaunsingh/nord.nvim',
   priority = 1000, -- Make sure to load this before all the other start plugins.
   init = function()
-    vim.cmd.colorscheme 'nord'
+    -- true colors for terminal
+    vim.opt.termguicolors = true
 
-    -- You can configure highlights by doing something like:
-    -- vim.cmd.hi 'Comment gui=none'
+    -- Example config in lua
+    vim.g.nord_contrast = true
+    vim.g.nord_borders = true
+    vim.g.nord_disable_background = false
+    vim.g.nord_italic = true
+    vim.g.nord_uniform_diff_background = true
+    vim.g.nord_bold = true
+
+    vim.cmd.colorscheme 'nord'
   end,
 }
