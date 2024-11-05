@@ -6,7 +6,7 @@ local config = wezterm.config_builder()
 
 config.window_close_confirmation = "NeverPrompt"
 
-config.default_prog = { "/bin/zsh" }
+-- config.default_prog = { "/bin/zsh" }
 
 -- Appearance
 local function color_scheme_by_theme(theme)
@@ -19,7 +19,8 @@ end
 
 config.window_background_opacity = 0.98
 
-config.color_scheme = color_scheme_by_theme(wezterm.gui.get_appearance())
+-- config.color_scheme = color_scheme_by_theme(wezterm.gui.get_appearance())
+config.color_scheme = "Nord (base16)"
 config.font = wezterm.font("BerkeleyMono Nerd Font Mono")
 config.font_size = 14
 config.window_decorations = "RESIZE"
@@ -59,6 +60,67 @@ config.colors = {
 		},
 	},
 }
+
+config.keys = {
+	{
+		key = "a",
+		mods = "CMD",
+		action = wezterm.action.ClearScrollback("ScrollbackAndViewport"),
+	},
+	{
+		key = "f",
+		mods = "CMD",
+		action = wezterm.action.TogglePaneZoomState,
+	},
+	{
+		key = "i",
+		mods = "CMD",
+		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = "u",
+		mods = "CMD",
+		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = "m",
+		mods = "CMD",
+		action = wezterm.action.SpawnWindow,
+	},
+	{
+		key = "p",
+		mods = "CMD",
+		action = wezterm.action.ActivateTabRelative(-1),
+	},
+	{
+		key = "n",
+		mods = "CMD",
+		action = wezterm.action.ActivateTabRelative(1),
+	},
+	{
+		key = "d",
+		mods = "CMD",
+		action = wezterm.action.CloseCurrentPane({ confirm = true }),
+	},
+	{
+		key = "d",
+		mods = "CMD|SHIFT",
+		action = wezterm.action.CloseCurrentTab({ confirm = true }),
+	},
+}
+
+local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
+-- you can put the rest of your Wezterm config here
+smart_splits.apply_to_config(config, {
+	-- directional keys to use in order of: left, down, up, right
+	direction_keys = { "h", "j", "k", "l" },
+
+	-- modifier keys to combine with direction_keys
+	modifiers = {
+		move = "CTRL", -- modifier to use for pane movement, e.g. CTRL+h to move left
+		resize = "CMD", -- modifier to use for pane resize, e.g. META+h to resize to the left
+	},
+})
 
 -- and finally, return the configuration to wezterm
 return config
