@@ -9,8 +9,6 @@ $git_branch\
 $git_status\
 $fill\
 [](fg:black)\
-${custom.live-clock-icon}\
-$time\
 [](fg:black)\
 \n$character"""
 
@@ -21,12 +19,13 @@ disabled = true
 
 # Replace the '❯' symbol in the prompt with '➜'
 [character] # The name of the module we are configuring is 'character'
-success_symbol = '[󱞪](bold cyan)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
-error_symbol = '[󱞪](bold red)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
-vimcmd_symbol = '[](bold cyan)'
+success_symbol = '[](bold cyan)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+error_symbol = '[](bold red)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+vimcmd_symbol = '[](bold cyan)'
 
 [fill]
 symbol = " "
+
 
 [git_status]
 untracked = "[ ](yellow)"
@@ -49,7 +48,7 @@ style = "fg:white bg:#5e81ac"
 format = '[$symbol $branch]($style)[ ](#5e81ac)'
 
 [time]
-disabled = false
+disabled = true
 time_format = "%R"
 style = "fg:#5e81ac bg:black"
 format = '[$time]($style)'
@@ -57,7 +56,7 @@ format = '[$time]($style)'
 [custom.live-clock-icon]
 command = 'echo "" | cut -c $(($(date +%H)%12+1))'
 description = "Live updating clock icon, changes hourly. Icons can be customized to your liking."
-when = true
+when = false
 style = "fg:#5e81ac bg:black"
 format = "[$output ]($style)"
 
