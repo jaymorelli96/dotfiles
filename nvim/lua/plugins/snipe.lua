@@ -2,12 +2,20 @@ return {
   'leath-dub/snipe.nvim',
   keys = {
     {
-      'gb',
+      '<leader><leader>',
       function()
         require('snipe').open_buffer_menu()
       end,
-      desc = '[G]o To [B]uffer',
     },
   },
-  opts = {},
+  opts = {
+    hints = {
+      dictionary = 'asflewcmpghio',
+    },
+    navigate = {
+      cancel_snipe = 'q',
+      close_buffer = 'd',
+    },
+    sort = 'last',
+  },
 }

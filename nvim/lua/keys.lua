@@ -46,11 +46,6 @@ vim.keymap.set('n', '<leader>fv', '<C-w>v', { desc = 'Split [V]ertically' })
 vim.keymap.set('n', '<leader>fh', '<C-w>s', { desc = 'Split [H]orizontally' })
 vim.keymap.set('n', '<leader>fe', '<C-w>=', { desc = 'Make Splits [E]qual Size' })
 
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 -- better navigation
 vim.keymap.set('n', 'G', 'Gzz', { desc = 'Go to end of file and center it' })
 vim.keymap.set({ 'n', 'v' }, 'gl', '$', { desc = 'Go to end of line' })

@@ -18,9 +18,8 @@ vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, 'TelescopeResultBorder', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = '#5e81ac' })
 vim.api.nvim_set_hl(0, 'TelescopeSelectionBorder', { fg = '#5e81ac' })
-vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { fg = '#5e81ac' })
-vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = '#5e81ac' })
-vim.api.nvim_set_hl(0, 'NeoTreeFloatBorder', { fg = '#5e81ac' })
+vim.api.nvim_set_hl(0, 'TelescopeTitle', { bg = '#5e81ac', fg = '#d8dee9' })
+vim.api.nvim_set_hl(0, 'NeoTreeFloatTitle', { bg = '#5e81ac', fg = '#d8dee9' })
 vim.api.nvim_set_hl(0, '@lsp.type.enumMember', { fg = '#5e81ac' })
 
 vim.api.nvim_set_hl(0, 'DiffAdd', { fg = '#a3be8c' })
@@ -39,6 +38,8 @@ vim.api.nvim_set_hl(0, 'NoicePopupmenuBorder', { bg = '#2e3440', fg = '#a3be8c' 
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#2e3440', fg = '#5e81ac' })
 
 vim.api.nvim_set_hl(0, 'Folded', { bg = '#3b4252', fg = '#5e81ac' })
+
+vim.api.nvim_set_hl(0, 'Title', { fg = '#88c0d0' })
 
 vim.api.nvim_set_hl(0, 'NeotestAdapterName', { fg = '#ebcb8b', bold = true })
 vim.api.nvim_set_hl(0, 'NeotestDirectory', { fg = '#e5e9f0' })
@@ -275,13 +276,13 @@ end, { desc = '[G]o to [E]rrors/Diagnostics' })
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldlevel = 99
-vim.o.foldcolumn = '1'
-vim.o.foldenable = false
-vim.o.fillchars = 'fold: ' -- Set fold fill character to space (removes dots)
+vim.o.foldcolumn = '0'
+vim.o.foldenable = true
+vim.o.fillchars = 'fold: ,vert:|,horiz:━' -- Set fold fill character to space (removes dots)
 function CustomFoldText()
   local line = vim.fn.getline(vim.v.foldstart)
   local lines_count = vim.v.foldend - vim.v.foldstart + 1
-  return ' ⮞ ' .. line .. ' ...' .. ' (' .. lines_count .. ' lines)'
+  return ' 󰄾 ' .. line .. ' ...' .. ' (' .. lines_count .. ' lines)'
 end
 
 vim.o.foldtext = 'v:lua.CustomFoldText()'
